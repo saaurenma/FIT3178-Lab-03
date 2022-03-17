@@ -19,14 +19,16 @@ class CurrentPartyTableViewController: UITableViewController {
     
     
     func testHeroes(){
-        
+        print(currentParty)
         currentParty.append(Superhero(newName:"Superman",newAbilities:"Super Powered Alien",  newUniverse:.dc))
+        print(currentParty)
+
         currentParty.append(Superhero(newName:"Wonder Woman",newAbilities:"Goddess",  newUniverse:.dc))
         currentParty.append(Superhero(newName:"The Flash",newAbilities:"Speed",  newUniverse:.dc))
         currentParty.append(Superhero(newName:"Green Lantern",newAbilities:"Power Ring",  newUniverse:.dc))
         currentParty.append(Superhero(newName:"Cyborg",newAbilities:"Robot Beep Beep",  newUniverse:.dc))
         currentParty.append(Superhero(newName:"Aquaman",newAbilities:"Atlantian",  newUniverse:.dc))
-
+    
     }
     
     override func viewDidLoad() {
@@ -37,16 +39,19 @@ class CurrentPartyTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        testHeroes()
     }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        // need to add case statement here
         
         return 0
     }
