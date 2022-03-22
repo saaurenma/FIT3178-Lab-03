@@ -45,15 +45,24 @@ class CurrentPartyTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        // need to add case statement here
+        switch section {
+            
+        case SECTION_HERO:
+            return currentParty.count
         
-        return 0
+        case SECTION_INFO:
+            return 1
+            
+        default:
+            return 0
+            
+        }
+        
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -98,7 +107,11 @@ class CurrentPartyTableViewController: UITableViewController {
 
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
+    
+        if indexPath.section == SECTION_HERO {
+            return true
+        }
+        
         return false
     }
 
