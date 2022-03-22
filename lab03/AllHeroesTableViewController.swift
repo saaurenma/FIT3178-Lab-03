@@ -85,10 +85,15 @@ class AllHeroesTableViewController: UITableViewController {
         }
         
         else {
-            let infoCell = tableView.dequeueReusableCell(withIdentifier: CELL_INFO, for: indexPath) as! HeroCountTableViewCell
-            infoCell.totalLabel?.text = "\(allHeroes.count) heroes in the database"
+           
+            let infoCell = tableView.dequeueReusableCell(withIdentifier: CELL_INFO, for: indexPath)
+            
+            let myCell = infoCell as! HeroCountTableViewCell
+
+            myCell.totalLabel?.text = "\(allHeroes.count) heroes in the database"
             
             return infoCell
+            
         }
     }
     // Override to support conditional editing of the table view.
