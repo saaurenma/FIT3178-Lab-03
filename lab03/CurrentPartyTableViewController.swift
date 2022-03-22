@@ -19,7 +19,6 @@ class CurrentPartyTableViewController: UITableViewController {
     
     
     func testHeroes(){
-        print(currentParty)
         currentParty.append(Superhero(newName:"Superman",newAbilities:"Super Powered Alien",  newUniverse:.dc))
         print(currentParty)
 

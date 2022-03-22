@@ -8,7 +8,9 @@
 import UIKit
 
 class HeroCountTableViewCell: UITableViewCell {
-
+    
+    @IBOutlet weak var totalLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
