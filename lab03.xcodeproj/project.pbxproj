@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		372A57E527E98D2300581FD4 /* HeroCountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372A57E427E98D2300581FD4 /* HeroCountTableViewCell.swift */; };
 		3735034C27E3024C0020738D /* AllHeroesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3735034B27E3024C0020738D /* AllHeroesTableViewController.swift */; };
-		3735035027E302DD0020738D /* HeroCountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3735034F27E302DD0020738D /* HeroCountTableViewCell.swift */; };
 		3735035227E30E100020738D /* AddSuperheroDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3735035127E30E100020738D /* AddSuperheroDelegate.swift */; };
 		3793792927E2EF110097CAD6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3793792827E2EF110097CAD6 /* AppDelegate.swift */; };
 		3793792B27E2EF110097CAD6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3793792A27E2EF110097CAD6 /* SceneDelegate.swift */; };
@@ -20,8 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		372A57E427E98D2300581FD4 /* HeroCountTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCountTableViewCell.swift; sourceTree = "<group>"; };
 		3735034B27E3024C0020738D /* AllHeroesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllHeroesTableViewController.swift; sourceTree = "<group>"; };
-		3735034F27E302DD0020738D /* HeroCountTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCountTableViewCell.swift; sourceTree = "<group>"; };
 		3735035127E30E100020738D /* AddSuperheroDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSuperheroDelegate.swift; sourceTree = "<group>"; };
 		3793792527E2EF110097CAD6 /* lab03.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lab03.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3793792827E2EF110097CAD6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -73,8 +73,8 @@
 				3793793C27E2F0250097CAD6 /* Superhero.swift */,
 				3793793E27E2F1080097CAD6 /* CurrentPartyTableViewController.swift */,
 				3735034B27E3024C0020738D /* AllHeroesTableViewController.swift */,
-				3735034F27E302DD0020738D /* HeroCountTableViewCell.swift */,
 				3735035127E30E100020738D /* AddSuperheroDelegate.swift */,
+				372A57E427E98D2300581FD4 /* HeroCountTableViewCell.swift */,
 			);
 			path = lab03;
 			sourceTree = "<group>";
@@ -153,8 +153,8 @@
 				3735034C27E3024C0020738D /* AllHeroesTableViewController.swift in Sources */,
 				3793792927E2EF110097CAD6 /* AppDelegate.swift in Sources */,
 				3793792B27E2EF110097CAD6 /* SceneDelegate.swift in Sources */,
-				3735035027E302DD0020738D /* HeroCountTableViewCell.swift in Sources */,
 				3793793D27E2F0250097CAD6 /* Superhero.swift in Sources */,
+				372A57E527E98D2300581FD4 /* HeroCountTableViewCell.swift in Sources */,
 				3735035227E30E100020738D /* AddSuperheroDelegate.swift in Sources */,
 				3793793F27E2F1080097CAD6 /* CurrentPartyTableViewController.swift in Sources */,
 			);

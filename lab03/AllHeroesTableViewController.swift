@@ -7,7 +7,9 @@
 
 import UIKit
 
-class AllHeroesTableViewController: UITableViewController {
+class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdating {
+
+    
     
     let SECTION_HERO = 0
     let SECTION_INFO = 1
@@ -27,6 +29,13 @@ class AllHeroesTableViewController: UITableViewController {
         createDefaultHeroes()
     }
 
+    func updateSearchResults(for searchController: UISearchController) {
+        
+        // need to implement
+        
+    }
+    
+    
     func displayMessage(title: String, message: String){
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Dismiss", style: .default,handler: nil ))
@@ -61,7 +70,7 @@ class AllHeroesTableViewController: UITableViewController {
         
         case SECTION_INFO:
             return 1
-            
+        
         default:
             return 0
             
@@ -86,11 +95,8 @@ class AllHeroesTableViewController: UITableViewController {
         
         else {
            
-            let infoCell = tableView.dequeueReusableCell(withIdentifier: CELL_INFO, for: indexPath)
-            
-            let myCell = infoCell as! HeroCountTableViewCell
-
-            myCell.totalLabel?.text = "\(allHeroes.count) heroes in the database"
+            let infoCell = tableView.dequeueReusableCell(withIdentifier: CELL_INFO, for: indexPath) as! HeroCountTableViewCell
+            infoCell.totalLabel?.text = "\(allHeroes.count) heroes in the database"
             
             return infoCell
             

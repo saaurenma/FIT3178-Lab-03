@@ -132,7 +132,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="totalLabel" destination="q2L-c8-JlF" id="Wnf-4c-uuh"/>
+                                    <outlet property="totalLabel" destination="q2L-c8-JlF" id="1Ou-ld-lM0"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

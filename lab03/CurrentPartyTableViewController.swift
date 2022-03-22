@@ -7,7 +7,9 @@
 
 import UIKit
 
-class CurrentPartyTableViewController: UITableViewController {
+class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelegate {
+    
+
     
     let SECTION_HERO = 0
     let SECTION_INFO = 1
@@ -41,8 +43,24 @@ class CurrentPartyTableViewController: UITableViewController {
         testHeroes()
     }
 
+    
+    func addSuperhero(_ newHero: Superhero) -> Bool {
+        if currentParty.count >= 6 {
+            return false
+        }
+        
+        tableView.performBatchUpdates({
+            currentParty.append(newHero)
+            tableView.insertRows(at: [IndexPath(row: currentParty.count - 1, section:
+        SECTION_HERO)],
+                with: .automatic)
+            tableView.reloadSections([SECTION_INFO], with: .automatic) },completion: nil)
+        return true
+    }
+    
+    
+    
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
@@ -143,14 +161,18 @@ class CurrentPartyTableViewController: UITableViewController {
     }
     */
 
-    /*
+
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "allHeroesSegue" {
+            let destination = segue.destination as! AllHeroesTableViewController
+            destination.superHeroDelegate = self
+            
+        }
+        
     }
-    */
+
 
 }

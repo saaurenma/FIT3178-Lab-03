@@ -2,12 +2,13 @@
 //  HeroCountTableViewCell.swift
 //  lab03
 //
-//  Created by Saauren Mankad on 17/3/2022.
+//  Created by Saauren Mankad on 22/3/2022.
 //
 
 import UIKit
 
 class HeroCountTableViewCell: UITableViewCell {
+
     
     @IBOutlet weak var totalLabel: UILabel!
     
