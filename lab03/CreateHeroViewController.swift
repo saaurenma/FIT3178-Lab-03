@@ -42,10 +42,17 @@ class CreateHeroViewController: UIViewController {
         }
         
         let hero = Superhero(newName: name, newAbilities: abilities, newUniverse: universe)
-        let _ = superHeroDelegate?.addSuperhero(hero)
-        navigationController?.popViewController(animated: true)
         
+        // ext part 1
         
+        if superHeroDelegate?.addSuperhero(hero) == false {
+            displayMessage(title: "Duplicate Hero", message: "Hero name already exists")
+        }
+        
+        else {
+            let _ = superHeroDelegate?.addSuperhero(hero)
+            navigationController?.popViewController(animated: true)
+        }
 
         
     }

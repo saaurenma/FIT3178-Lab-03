@@ -8,6 +8,8 @@
 import UIKit
 
 class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelegate {
+
+    
     
 
     
@@ -45,16 +47,20 @@ class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelega
 
     
     func addSuperhero(_ newHero: Superhero) -> Bool {
+        
         if currentParty.count >= 6 {
             return false
         }
         
+        let heroNames = currentParty.filter({$0.name == newHero.name})
+        
         tableView.performBatchUpdates({
+            if heroNames == [] {
             currentParty.append(newHero)
             tableView.insertRows(at: [IndexPath(row: currentParty.count - 1, section:
         SECTION_HERO)],
                 with: .automatic)
-            tableView.reloadSections([SECTION_INFO], with: .automatic) },completion: nil)
+                tableView.reloadSections([SECTION_INFO], with: .automatic) }},completion: nil)
         return true
     }
     

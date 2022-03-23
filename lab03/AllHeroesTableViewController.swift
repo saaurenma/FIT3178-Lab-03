@@ -41,9 +41,18 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
         definesPresentationContext = true
     }
     
+
     
     func addSuperhero(_ newHero: Superhero) -> Bool {
+        
+        let heroNames = allHeroes.filter({$0.name == newHero.name})
+        
+        if heroNames != [] {
+            return false
+        }
+        
         tableView.performBatchUpdates({
+
             allHeroes.append(newHero)
             filteredHeroes.append(newHero)
             
