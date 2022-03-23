@@ -15,9 +15,12 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
     let SECTION_INFO = 1
     
     let CELL_HERO = "heroCell"
-    let CELL_INFO = "heroCell"
+    let CELL_INFO = "totalCell"
+    
     
     var allHeroes: [Superhero] = []
+    
+    var filteredHeroes: [Superhero] = []
     
     weak var superHeroDelegate: AddSuperHeroDelegate?
     
@@ -27,12 +30,31 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
     override func viewDidLoad() {
         super.viewDidLoad()
         createDefaultHeroes()
+        filteredHeroes = allHeroes
+        
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.placeholder = "Search All Heroes"
+        navigationItem.searchController = searchController
+        
+        definesPresentationContext = true
     }
 
     func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text?.lowercased() else {
+            return
+        }
         
-        // need to implement
+        if searchText.count > 0 {
+            filteredHeroes = allHeroes.filter({(hero:Superhero) -> Bool in return (hero.name?.lowercased().contains(searchText) ?? false)
+                
+            })
+            
+        } else {
+            filteredHeroes = allHeroes
+        }
         
+        tableView.reloadData()
     }
     
     
@@ -66,7 +88,7 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
         switch section {
             
         case SECTION_HERO:
-            return allHeroes.count
+            return filteredHeroes.count
         
         case SECTION_INFO:
             return 1
@@ -85,7 +107,7 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
             let heroCell = tableView.dequeueReusableCell(withIdentifier: CELL_HERO, for: indexPath)
             
             var content = heroCell.defaultContentConfiguration()
-            let hero = allHeroes[indexPath.row]
+            let hero = filteredHeroes[indexPath.row]
             content.text = hero.name
             content.secondaryText = hero.abilities
             heroCell.contentConfiguration = content
@@ -94,9 +116,10 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
         }
         
         else {
-           
+            self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+
             let infoCell = tableView.dequeueReusableCell(withIdentifier: CELL_INFO, for: indexPath) as! HeroCountTableViewCell
-            infoCell.totalLabel?.text = "\(allHeroes.count) heroes in the database"
+            infoCell.totalLabel?.text = "\(filteredHeroes.count) heroes in the database"
             
             return infoCell
             
@@ -116,7 +139,12 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete && indexPath.section == SECTION_HERO {
             tableView.performBatchUpdates({
-                self.allHeroes.remove(at: indexPath.row)
+
+                if let index = self.allHeroes.firstIndex(of: filteredHeroes[indexPath.row]){
+                    self.allHeroes.remove(at: index)
+                }
+                
+                self.filteredHeroes.remove(at: indexPath.row)
                 self.tableView.deleteRows(at: [indexPath], with: .fade)
                 self.tableView.reloadSections([SECTION_INFO], with: .automatic)
             }, completion:nil)
@@ -125,7 +153,7 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let superHeroDelegate = superHeroDelegate {
-            if superHeroDelegate.addSuperhero(allHeroes[indexPath.row]) {
+            if superHeroDelegate.addSuperhero(filteredHeroes[indexPath.row]) {
                 navigationController?.popViewController(animated: false)
                 return
             }
