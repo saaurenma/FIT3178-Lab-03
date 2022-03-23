@@ -10,6 +10,7 @@
 		372A57E527E98D2300581FD4 /* HeroCountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372A57E427E98D2300581FD4 /* HeroCountTableViewCell.swift */; };
 		3735034C27E3024C0020738D /* AllHeroesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3735034B27E3024C0020738D /* AllHeroesTableViewController.swift */; };
 		3735035227E30E100020738D /* AddSuperheroDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3735035127E30E100020738D /* AddSuperheroDelegate.swift */; };
+		3758EBBD27EA9EB70017BC4C /* CreateHeroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3758EBBC27EA9EB70017BC4C /* CreateHeroViewController.swift */; };
 		3793792927E2EF110097CAD6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3793792827E2EF110097CAD6 /* AppDelegate.swift */; };
 		3793792B27E2EF110097CAD6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3793792A27E2EF110097CAD6 /* SceneDelegate.swift */; };
 		3793793027E2EF110097CAD6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3793792E27E2EF110097CAD6 /* Main.storyboard */; };
@@ -23,6 +24,7 @@
 		372A57E427E98D2300581FD4 /* HeroCountTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCountTableViewCell.swift; sourceTree = "<group>"; };
 		3735034B27E3024C0020738D /* AllHeroesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllHeroesTableViewController.swift; sourceTree = "<group>"; };
 		3735035127E30E100020738D /* AddSuperheroDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSuperheroDelegate.swift; sourceTree = "<group>"; };
+		3758EBBC27EA9EB70017BC4C /* CreateHeroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHeroViewController.swift; sourceTree = "<group>"; };
 		3793792527E2EF110097CAD6 /* lab03.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lab03.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3793792827E2EF110097CAD6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3793792A27E2EF110097CAD6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				3735034B27E3024C0020738D /* AllHeroesTableViewController.swift */,
 				3735035127E30E100020738D /* AddSuperheroDelegate.swift */,
 				372A57E427E98D2300581FD4 /* HeroCountTableViewCell.swift */,
+				3758EBBC27EA9EB70017BC4C /* CreateHeroViewController.swift */,
 			);
 			path = lab03;
 			sourceTree = "<group>";
@@ -152,6 +155,7 @@
 			files = (
 				3735034C27E3024C0020738D /* AllHeroesTableViewController.swift in Sources */,
 				3793792927E2EF110097CAD6 /* AppDelegate.swift in Sources */,
+				3758EBBD27EA9EB70017BC4C /* CreateHeroViewController.swift in Sources */,
 				3793792B27E2EF110097CAD6 /* SceneDelegate.swift in Sources */,
 				3793793D27E2F0250097CAD6 /* Superhero.swift in Sources */,
 				372A57E527E98D2300581FD4 /* HeroCountTableViewCell.swift in Sources */,

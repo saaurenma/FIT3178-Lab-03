@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -111,14 +112,14 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="totalCell" id="iAM-6h-uwu" customClass="HeroCountTableViewCell" customModule="lab03" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="93" width="414" height="36"/>
+                                <rect key="frame" x="0.0" y="93" width="414" height="36.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="iAM-6h-uwu" id="5Vt-tX-kYS">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="36"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="36.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q2L-c8-JlF">
-                                            <rect key="frame" x="20" y="11" width="374" height="14"/>
+                                            <rect key="frame" x="20" y="11" width="374" height="14.5"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                             <color key="textColor" systemColor="secondaryLabelColor"/>
                                             <nil key="highlightedColor"/>
@@ -142,12 +143,105 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="All Heroes" id="La1-ug-Kcg">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="tg7-3c-onT"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="tg7-3c-onT">
+                            <connections>
+                                <segue destination="YHh-bO-w24" kind="show" identifier="createHeroSegue" id="8vB-ZD-q52"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="plG-ej-VfO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2734.7826086956525" y="69.642857142857139"/>
+        </scene>
+        <!--Create New Hero-->
+        <scene sceneID="CPP-QK-W65">
+            <objects>
+                <viewController id="YHh-bO-w24" customClass="CreateHeroViewController" customModule="lab03" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="vCg-DU-x2N">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hero Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oE6-xj-c2v">
+                                <rect key="frame" x="20" y="108" width="374" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hero Abilities" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DjN-Yv-fs2">
+                                <rect key="frame" x="20" y="203" width="374" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Universe" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VjT-xL-U8q">
+                                <rect key="frame" x="20" y="298" width="374" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="R64-IP-CL2">
+                                <rect key="frame" x="20" y="149" width="374" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FLp-8p-oiJ">
+                                <rect key="frame" x="20" y="244" width="374" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Qex-bR-27v">
+                                <rect key="frame" x="20" y="339" width="374" height="32"/>
+                                <segments>
+                                    <segment title="Marvel"/>
+                                    <segment title="DC"/>
+                                </segments>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U61-7G-nLO">
+                                <rect key="frame" x="20" y="390" width="374" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Create Hero"/>
+                                <connections>
+                                    <action selector="createHero:" destination="YHh-bO-w24" eventType="touchUpInside" id="BCg-jR-dv3"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="SHT-iT-0EZ"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="SHT-iT-0EZ" firstAttribute="trailing" secondItem="U61-7G-nLO" secondAttribute="trailing" constant="20" id="4AJ-SB-1Hi"/>
+                            <constraint firstItem="oE6-xj-c2v" firstAttribute="leading" secondItem="SHT-iT-0EZ" secondAttribute="leading" constant="20" id="6Ca-dI-CUv"/>
+                            <constraint firstItem="SHT-iT-0EZ" firstAttribute="trailing" secondItem="DjN-Yv-fs2" secondAttribute="trailing" constant="20" id="6o6-sw-0ZX"/>
+                            <constraint firstItem="FLp-8p-oiJ" firstAttribute="top" secondItem="DjN-Yv-fs2" secondAttribute="bottom" constant="20" id="9gp-XN-9x4"/>
+                            <constraint firstItem="R64-IP-CL2" firstAttribute="top" secondItem="oE6-xj-c2v" secondAttribute="bottom" constant="20" id="AkJ-X8-xZa"/>
+                            <constraint firstItem="U61-7G-nLO" firstAttribute="top" secondItem="Qex-bR-27v" secondAttribute="bottom" constant="20" id="Dh5-Lz-TYN"/>
+                            <constraint firstItem="SHT-iT-0EZ" firstAttribute="trailing" secondItem="Qex-bR-27v" secondAttribute="trailing" constant="20" id="E1O-YD-u6S"/>
+                            <constraint firstItem="SHT-iT-0EZ" firstAttribute="trailing" secondItem="VjT-xL-U8q" secondAttribute="trailing" constant="20" id="Fog-tt-Gcb"/>
+                            <constraint firstItem="SHT-iT-0EZ" firstAttribute="trailing" secondItem="oE6-xj-c2v" secondAttribute="trailing" constant="20" id="G8S-Ne-rJb"/>
+                            <constraint firstItem="Qex-bR-27v" firstAttribute="leading" secondItem="SHT-iT-0EZ" secondAttribute="leading" constant="20" id="GSU-8H-8tU"/>
+                            <constraint firstItem="SHT-iT-0EZ" firstAttribute="trailing" secondItem="R64-IP-CL2" secondAttribute="trailing" constant="20" id="Qyr-tM-ZGE"/>
+                            <constraint firstItem="oE6-xj-c2v" firstAttribute="top" secondItem="SHT-iT-0EZ" secondAttribute="top" constant="20" id="USp-ng-UC2"/>
+                            <constraint firstItem="VjT-xL-U8q" firstAttribute="leading" secondItem="SHT-iT-0EZ" secondAttribute="leading" constant="20" id="YQw-ao-bvh"/>
+                            <constraint firstItem="VjT-xL-U8q" firstAttribute="top" secondItem="FLp-8p-oiJ" secondAttribute="bottom" constant="20" id="dF9-ab-tG2"/>
+                            <constraint firstItem="Qex-bR-27v" firstAttribute="top" secondItem="VjT-xL-U8q" secondAttribute="bottom" constant="20" id="fHR-4I-jhs"/>
+                            <constraint firstItem="U61-7G-nLO" firstAttribute="leading" secondItem="SHT-iT-0EZ" secondAttribute="leading" constant="20" id="jSI-at-Va3"/>
+                            <constraint firstItem="FLp-8p-oiJ" firstAttribute="leading" secondItem="SHT-iT-0EZ" secondAttribute="leading" constant="20" id="nCt-iJ-Ge5"/>
+                            <constraint firstItem="DjN-Yv-fs2" firstAttribute="top" secondItem="R64-IP-CL2" secondAttribute="bottom" constant="20" id="prA-6b-Tmr"/>
+                            <constraint firstItem="R64-IP-CL2" firstAttribute="leading" secondItem="SHT-iT-0EZ" secondAttribute="leading" constant="20" id="pvF-MD-aoA"/>
+                            <constraint firstItem="SHT-iT-0EZ" firstAttribute="trailing" secondItem="FLp-8p-oiJ" secondAttribute="trailing" constant="20" id="qHX-Pq-uqh"/>
+                            <constraint firstItem="DjN-Yv-fs2" firstAttribute="leading" secondItem="SHT-iT-0EZ" secondAttribute="leading" constant="20" id="xnR-qJ-cnA"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Create New Hero" id="u9X-hr-beZ"/>
+                    <connections>
+                        <outlet property="abilitiesTextField" destination="FLp-8p-oiJ" id="EId-jv-YuJ"/>
+                        <outlet property="nameTextField" destination="R64-IP-CL2" id="GrL-tN-zvo"/>
+                        <outlet property="universeSegmentedControl" destination="Qex-bR-27v" id="OOP-kT-UGG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MQo-Rf-Ndd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3615.9420289855075" y="69.642857142857139"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="5c2-th-6pH">
