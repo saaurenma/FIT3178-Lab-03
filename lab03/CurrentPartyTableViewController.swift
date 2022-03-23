@@ -11,7 +11,8 @@ class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelega
 
     
     
-
+    let SECTION_MARVEL = 0
+    let SECTION_DC = 1
     
     let SECTION_HERO = 0
     let SECTION_INFO = 1
@@ -19,20 +20,8 @@ class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelega
     let CELL_HERO = "heroCell"
     let CELL_INFO = "partySizeCell"
     
-    var currentParty: [Superhero] = []
+    var currentParty: [[Superhero]] = [[], []]
     
-    
-    func testHeroes(){
-        currentParty.append(Superhero(newName:"Superman",newAbilities:"Super Powered Alien",  newUniverse:.dc))
-        print(currentParty)
-
-        currentParty.append(Superhero(newName:"Wonder Woman",newAbilities:"Goddess",  newUniverse:.dc))
-        currentParty.append(Superhero(newName:"The Flash",newAbilities:"Speed",  newUniverse:.dc))
-        currentParty.append(Superhero(newName:"Green Lantern",newAbilities:"Power Ring",  newUniverse:.dc))
-        currentParty.append(Superhero(newName:"Cyborg",newAbilities:"Robot Beep Beep",  newUniverse:.dc))
-        currentParty.append(Superhero(newName:"Aquaman",newAbilities:"Atlantian",  newUniverse:.dc))
-    
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,16 +37,25 @@ class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelega
     
     func addSuperhero(_ newHero: Superhero) -> Bool {
         
-        if currentParty.count >= 6 {
+        if currentParty[SECTION_MARVEL].count + currentParty[SECTION_DC].count >= 6 {
             return false
         }
         
-        let heroNames = currentParty.filter({$0.name == newHero.name})
-        
+        let marvelHeroNames = currentParty[SECTION_MARVEL].filter({$0.name == newHero.name})
+        let DCHeroNames = currentParty[SECTION_DC].filter({$0.name == newHero.name})
+
         tableView.performBatchUpdates({
-            if heroNames == [] {
-            currentParty.append(newHero)
-            tableView.insertRows(at: [IndexPath(row: currentParty.count - 1, section:
+            if marvelHeroNames == [] && DCHeroNames == []{
+                
+                if newHero.universe?.rawValue == SECTION_MARVEL {
+                    currentParty[SECTION_MARVEL].append(newHero)
+                }
+                
+                else if newHero.universe?.rawValue == SECTION_DC {
+                    currentParty[SECTION_DC].append(newHero)
+                }
+                
+            tableView.insertRows(at: [IndexPath(row: (currentParty[SECTION_MARVEL].count + currentParty[SECTION_DC].count) - 1, section:
         SECTION_HERO)],
                 with: .automatic)
                 tableView.reloadSections([SECTION_INFO], with: .automatic) }},completion: nil)
@@ -68,7 +66,7 @@ class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelega
     
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -76,7 +74,7 @@ class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelega
         switch section {
             
         case SECTION_HERO:
-            return currentParty.count
+            return currentParty[SECTION_MARVEL].count + currentParty[SECTION_DC].count
         
         case SECTION_INFO:
             return 1
@@ -92,12 +90,15 @@ class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelega
         if indexPath.section == SECTION_HERO {
             
             let heroCell = tableView.dequeueReusableCell(withIdentifier: CELL_HERO, for: indexPath)
-            
+                        
             var content = heroCell.defaultContentConfiguration()
-            let hero = currentParty[indexPath.row]
+            let marvelHero = currentParty[SECTION_MARVEL][indexPath.row]
+//            let DCHero = currentParty[SECTION_DC][indexPath.row]
             
-            content.text = hero.name
-            content.secondaryText = hero.abilities
+            
+            
+            content.text = marvelHero.name
+            content.secondaryText = marvelHero.abilities
             heroCell.contentConfiguration = content
             
             return heroCell
@@ -119,7 +120,7 @@ class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelega
             }
             
             else {
-                content.text = "\(currentParty.count)/6 Heroes in Party"
+                content.text = "\(currentParty[SECTION_MARVEL].count + currentParty[SECTION_DC].count)/6 Heroes in Party"
             }
             infoCell.contentConfiguration = content
             return infoCell
@@ -150,6 +151,19 @@ class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelega
             }, completion:nil)
         }
         
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection
+                                section: Int) -> String? {
+        if section == SECTION_MARVEL {
+            return "Marvel"
+        }
+        
+        else if section == SECTION_DC {
+            return "DC"
+        }
+        
+        return ""
     }
 
     /*
