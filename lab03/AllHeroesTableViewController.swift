@@ -36,6 +36,8 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.searchBar.placeholder = "Search All Heroes"
+        
+        searchController.searchBar.scopeButtonTitles = ["Marvel","DC"]
         navigationItem.searchController = searchController
         
         definesPresentationContext = true
@@ -68,11 +70,11 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
             return
         }
         
+        let selectedUniverseIndex = searchController.searchBar.selectedScopeButtonIndex
+        
         if searchText.count > 0 {
-            filteredHeroes = allHeroes.filter({(hero:Superhero) -> Bool in return (hero.name?.lowercased().contains(searchText) ?? false)
-                
+            filteredHeroes = allHeroes.filter({(hero:Superhero) -> Bool in return (hero.name?.lowercased().contains(searchText) ?? false && hero.universe?.rawValue == selectedUniverseIndex)
             })
-            
         } else {
             filteredHeroes = allHeroes
         }
@@ -96,6 +98,12 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
         allHeroes.append(Superhero(newName:"Green Lantern",newAbilities:"Power Ring",  newUniverse:.dc))
         allHeroes.append(Superhero(newName:"Cyborg",newAbilities:"Atlantian",  newUniverse:.dc))
         allHeroes.append(Superhero(newName:"Aquaman",newAbilities:"Atlantian",  newUniverse:.dc))
+        
+        
+        allHeroes.append(Superhero(newName:"Hulk",newAbilities:"Strength",  newUniverse:.marvel))
+        allHeroes.append(Superhero(newName:"Captain America",newAbilities:"Shield",  newUniverse:.marvel))
+        allHeroes.append(Superhero(newName:"Iron Man",newAbilities:"Armour",  newUniverse:.marvel))
+        allHeroes.append(Superhero(newName:"Thor",newAbilities:"God",  newUniverse:.marvel))
 
     }
     
