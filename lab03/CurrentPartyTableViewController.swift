@@ -7,7 +7,9 @@
 
 import UIKit
 
-class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelegate {
+class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
+
+    
     
 
     
@@ -19,18 +21,9 @@ class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelega
     
     var currentParty: [Superhero] = []
     
-    
-    func testHeroes(){
-        currentParty.append(Superhero(newName:"Superman",newAbilities:"Super Powered Alien",  newUniverse:.dc))
-        print(currentParty)
+    var listenerType: ListenerType = .team
+    weak var databaseController: DatabaseProtocol?
 
-        currentParty.append(Superhero(newName:"Wonder Woman",newAbilities:"Goddess",  newUniverse:.dc))
-        currentParty.append(Superhero(newName:"The Flash",newAbilities:"Speed",  newUniverse:.dc))
-        currentParty.append(Superhero(newName:"Green Lantern",newAbilities:"Power Ring",  newUniverse:.dc))
-        currentParty.append(Superhero(newName:"Cyborg",newAbilities:"Robot Beep Beep",  newUniverse:.dc))
-        currentParty.append(Superhero(newName:"Aquaman",newAbilities:"Atlantian",  newUniverse:.dc))
-    
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,22 +33,38 @@ class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelega
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
-        //testHeroes()
+        
+        // set databaseController
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        databaseController = appDelegate?.databaseController
+        
+    }
+    
+    func onTeamChange(change: DatabaseChange, teamHeroes: [Superhero]) {
+        currentParty = teamHeroes
+        tableView.reloadData()
+    }
+    
+    func onAllHeroesChange(change: DatabaseChange, heroes: [Superhero]) {
+        // do nothing
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        databaseController?.addListener(listener: self)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        databaseController?.removeListener(listener: self)
     }
 
     
     func addSuperhero(_ newHero: Superhero) -> Bool {
-        if currentParty.count >= 6 {
-            return false
-        }
         
-        tableView.performBatchUpdates({
-            currentParty.append(newHero)
-            tableView.insertRows(at: [IndexPath(row: currentParty.count - 1, section:
-        SECTION_HERO)],
-                with: .automatic)
-            tableView.reloadSections([SECTION_INFO], with: .automatic) },completion: nil)
-        return true
+        
+        return databaseController?.addHeroToTeam(hero: newHero, team: databaseController!.defaultTeam) ?? false
+        
     }
     
     
@@ -137,11 +146,7 @@ class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelega
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete && indexPath.section == SECTION_HERO {
-            tableView.performBatchUpdates({
-                self.currentParty.remove(at: indexPath.row)
-                self.tableView.deleteRows(at: [indexPath], with: .fade)
-                self.tableView.reloadSections([SECTION_INFO], with: .automatic)
-            }, completion:nil)
+            self.databaseController?.removeHeroFromTeam(hero: currentParty[indexPath.row], team: databaseController!.defaultTeam)
         }
         
     }
@@ -166,12 +171,7 @@ class CurrentPartyTableViewController: UITableViewController, AddSuperHeroDelega
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "allHeroesSegue" {
-            let destination = segue.destination as! AllHeroesTableViewController
-            destination.superHeroDelegate = self
-            
-        }
-        
+
     }
 
 

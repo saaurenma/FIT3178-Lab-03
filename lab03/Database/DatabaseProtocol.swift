@@ -33,10 +33,21 @@ protocol DatabaseListener: AnyObject {
 }
 
 protocol DatabaseProtocol: AnyObject {
+    var defaultTeam: Team {get}
+
+    
     func cleanup()
     func addListener(listener: DatabaseListener)
     func removeListener(listener: DatabaseListener)
     func addSuperhero(name: String, abilities: String, universe: Universe) -> Superhero
     func deleteSuperhero(hero: Superhero)
+
+    // team
+    func addTeam(teamName: String) -> Team
+    func deleteTeam(team: Team)
+    func addHeroToTeam(hero: Superhero, team: Team) -> Bool
+    func removeHeroFromTeam(hero:Superhero, team:Team)
+    
+    
     
 }

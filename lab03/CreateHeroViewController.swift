@@ -15,6 +15,16 @@ class CreateHeroViewController: UIViewController {
     
     weak var superHeroDelegate: AddSuperHeroDelegate?
     
+    weak var databaseController: DatabaseProtocol?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        databaseController = appDelegate?.databaseController
+        
+    }
+    
     
     func displayMessage(title: String, message: String){
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -25,7 +35,7 @@ class CreateHeroViewController: UIViewController {
     
     @IBAction func createHero(_ sender: Any) {
         
-        guard let name = nameTextField.text, let abilities = abilitiesTextField.text, let universe = Universe(rawValue: universeSegmentedControl.selectedSegmentIndex) else {
+        guard let name = nameTextField.text, let abilities = abilitiesTextField.text, let universe = Universe(rawValue: Int32(universeSegmentedControl.selectedSegmentIndex)) else {
             return
         }
         
@@ -41,8 +51,8 @@ class CreateHeroViewController: UIViewController {
             return
         }
         
-        let hero = Superhero(newName: name, newAbilities: abilities, newUniverse: universe)
-        let _ = superHeroDelegate?.addSuperhero(hero)
+        let _ = databaseController?.addSuperhero(name: name, abilities: abilities, universe: universe)
+        
         navigationController?.popViewController(animated: true)
         
         
@@ -51,11 +61,7 @@ class CreateHeroViewController: UIViewController {
     }
     
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-    }
     
 
     /*

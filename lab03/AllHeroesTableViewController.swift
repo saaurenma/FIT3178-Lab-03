@@ -7,10 +7,7 @@
 
 import UIKit
 
-class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdating, AddSuperHeroDelegate {
-    
-
-    
+class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdating, DatabaseListener {
     
     let SECTION_HERO = 0
     let SECTION_INFO = 1
@@ -25,12 +22,19 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
     
     weak var superHeroDelegate: AddSuperHeroDelegate?
     
- 
+    
+    var listenerType = ListenerType.heroes
+    weak var databaseController: DatabaseProtocol?
+    
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        createDefaultHeroes()
+        
+        // set databaseController
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        databaseController = appDelegate?.databaseController
+        
         filteredHeroes = allHeroes
         
         let searchController = UISearchController(searchResultsController: nil)
@@ -42,16 +46,25 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
     }
     
     
-    func addSuperhero(_ newHero: Superhero) -> Bool {
-        tableView.performBatchUpdates({
-            allHeroes.append(newHero)
-            filteredHeroes.append(newHero)
-            
-            tableView.insertRows(at: [IndexPath(row: filteredHeroes.count - 1, section:SECTION_HERO)], with: .automatic)
-            tableView.reloadSections([SECTION_INFO], with: .automatic)
-        }, completion: nil)
-        
-        return true
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        databaseController?.addListener(listener: self)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        databaseController?.removeListener(listener: self)
+    }
+
+    
+    func onTeamChange(change: DatabaseChange, teamHeroes: [Superhero]) {
+        // do nothing
+    }
+    
+    func onAllHeroesChange(change: DatabaseChange, heroes: [Superhero]) {
+        allHeroes = heroes
+        updateSearchResults(for: navigationItem.searchController!)
     }
 
     func updateSearchResults(for searchController: UISearchController) {
@@ -78,17 +91,6 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
         self.present(alertController, animated: true, completion: nil)
     }
     
-    func createDefaultHeroes() {
-        
-        allHeroes.append(Superhero(newName:"Bruce Wayne",newAbilities:"Money",  newUniverse:.dc))
-        allHeroes.append(Superhero(newName:"Superman",newAbilities:"Super Powered Alien",  newUniverse:.dc))
-        allHeroes.append(Superhero(newName:"Wonder Woman",newAbilities:"Goddess",  newUniverse:.dc))
-        allHeroes.append(Superhero(newName:"The Flash",newAbilities:"Speed",  newUniverse:.dc))
-        allHeroes.append(Superhero(newName:"Green Lantern",newAbilities:"Power Ring",  newUniverse:.dc))
-        allHeroes.append(Superhero(newName:"Cyborg",newAbilities:"Atlantian",  newUniverse:.dc))
-        allHeroes.append(Superhero(newName:"Aquaman",newAbilities:"Atlantian",  newUniverse:.dc))
-
-    }
     
     // MARK: - Table view data source
 
@@ -152,30 +154,26 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete && indexPath.section == SECTION_HERO {
-            tableView.performBatchUpdates({
-
-                if let index = self.allHeroes.firstIndex(of: filteredHeroes[indexPath.row]){
-                    self.allHeroes.remove(at: index)
-                }
-                
-                self.filteredHeroes.remove(at: indexPath.row)
-                self.tableView.deleteRows(at: [indexPath], with: .fade)
-                self.tableView.reloadSections([SECTION_INFO], with: .automatic)
-            }, completion:nil)
+            
+            let hero = filteredHeroes[indexPath.row]
+            databaseController?.deleteSuperhero(hero: hero)
+            
         }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let superHeroDelegate = superHeroDelegate {
-            if superHeroDelegate.addSuperhero(filteredHeroes[indexPath.row]) {
-                navigationController?.popViewController(animated: false)
-                return
-            }
-            else {
-                displayMessage(title: "Party Full", message: "Unable to add more members to party")
-            }
+        let hero = filteredHeroes[indexPath.row]
+        let heroAdded = databaseController?.addHeroToTeam(hero: hero, team: databaseController!.defaultTeam) ?? false
+
+        if heroAdded {
+            navigationController?.popViewController(animated: false)
+            return
         }
+        
+        displayMessage(title: "Party Full", message: "Unable to add more members to party")
+        
         tableView.deselectRow(at: indexPath, animated: true)
+        
     }
     
 
@@ -198,11 +196,9 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "createHeroSegue" {
-            let destination = segue.destination as! CreateHeroViewController
-            destination.superHeroDelegate = self
-            
-        }
+
+        
+        
     }
 
 }
