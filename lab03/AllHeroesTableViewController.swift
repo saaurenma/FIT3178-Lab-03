@@ -8,6 +8,8 @@
 import UIKit
 
 class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdating, DatabaseListener {
+
+    
     
     let SECTION_HERO = 0
     let SECTION_INFO = 1
@@ -65,6 +67,10 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
     func onAllHeroesChange(change: DatabaseChange, heroes: [Superhero]) {
         allHeroes = heroes
         updateSearchResults(for: navigationItem.searchController!)
+    }
+    
+    func onTeamsChange(change: DatabaseChange, teams: [Team]) {
+        // do nothing
     }
 
     func updateSearchResults(for searchController: UISearchController) {
@@ -163,8 +169,8 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let hero = filteredHeroes[indexPath.row]
-        let heroAdded = databaseController?.addHeroToTeam(hero: hero, team: databaseController!.defaultTeam) ?? false
-
+        let heroAdded = databaseController?.addHeroToTeam(hero: hero, team: databaseController!.currentTeam!) ?? false
+        print("hero added? -> \(heroAdded)")
         if heroAdded {
             navigationController?.popViewController(animated: false)
             return

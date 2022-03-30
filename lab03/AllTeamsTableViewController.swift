@@ -7,10 +7,15 @@
 
 import UIKit
 
-class AllTeamsTableViewController: UITableViewController {
+class AllTeamsTableViewController: UITableViewController, DatabaseListener {
+    
+    
+    var listenerType: ListenerType = .team
+    weak var databaseController: DatabaseProtocol?
+
 
     var teamName: String?
-    var allTeams: [String] = []
+    var allTeams: [Team] = []
 
     let SECTION_TEAM = 0
     let SECTION_TEAM_TOTAL = 1
@@ -18,7 +23,7 @@ class AllTeamsTableViewController: UITableViewController {
     let CELL_TEAM = "teamCell"
     let CELL_TOTAL = "totalTeamsCell"
     
-    
+    var selectedTeam: Team?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,34 +33,95 @@ class AllTeamsTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        databaseController = appDelegate?.databaseController
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        databaseController?.addListener(listener: self)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        databaseController?.removeListener(listener: self)
+    }
+    
+    
+    func onTeamChange(change: DatabaseChange, teamHeroes: [Superhero]) {
+        
+        //?
+        
+    }
+    
+    func onAllHeroesChange(change: DatabaseChange, heroes: [Superhero]) {
+        // ?
+    }
+    
+    func onTeamsChange(change: DatabaseChange, teams: [Team]) {
+        allTeams = teams
+        tableView.reloadData()
+    }
+    
+    
+    func displayMessage(title: String, message: String){
+         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+         alertController.addAction(UIAlertAction(title: "Dismiss", style: .default,handler: nil ))
+         self.present(alertController, animated: true, completion: nil)
+     }
+
+        
+    func addTeam(_ newTeam: String) -> Bool {
+        if let teamObject = databaseController?.addTeam(teamName: newTeam) {
+            tableView.performBatchUpdates({
+                allTeams.append(teamObject)
+                tableView.insertRows(at: [IndexPath(row: allTeams.count - 1, section:
+            SECTION_TEAM)],
+                    with: .automatic)
+                tableView.reloadSections([SECTION_TEAM_TOTAL], with: .automatic) },completion: nil)
+            return true
+        }
+        else {
+            return false
+        }
+
+        
     }
 
-    func getTeamName() -> String? {
         
-
+    
+    // MARK: - Table view data source
+    
+    @IBAction func addTeamAction(_ sender: Any) {
+        
+        
+        var teamTextField = UITextField()
+        var teamText = ""
+        
         let alertController = UIAlertController(title: "Add a Team", message: "", preferredStyle: .alert)
-        let confirmAction = UIAlertAction(title: "OK", style: .default) { (action: UIAlertAction) -> String in
+        
+        alertController.addTextField()
+        
+        let confirmAction = UIAlertAction(title: "OK", style: .default) { (action: UIAlertAction) -> Void in
             
-            let x = alertController.textFields![0].text
+            teamTextField = alertController.textFields![0] as UITextField
             
+            teamText = teamTextField.text!
+            
+            
+            if self.addTeam(teamText) == false{
+                self.displayMessage(title: "Error", message: "Maximum of 10 heroes allowed")
+            }
+                
         }
+        
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .default)
         
         alertController.addAction(confirmAction)
         alertController.addAction(cancelAction)
         present(alertController, animated: true)
-        
-        
-    }
-    
-    
-    // MARK: - Table view data source
-
-
-    @IBAction func addTeamAction(_ sender: Any) {
-        
-
         
     }
     
@@ -92,11 +158,9 @@ class AllTeamsTableViewController: UITableViewController {
             var content = teamCell.defaultContentConfiguration()
             let team = self.allTeams[indexPath.row]
             
-            content.text = team
+            content.text = team.name
             teamCell.contentConfiguration = content
-            
-            print(self.allTeams.count)
-            
+                        
             return teamCell
             
             
@@ -110,7 +174,8 @@ class AllTeamsTableViewController: UITableViewController {
             
             var content = totalTeamCell.defaultContentConfiguration()
             
-            if self.allTeams.isEmpty{
+            
+            if allTeams.isEmpty{
                 
                 content.text = "No teams added. Press + to add some."
             }
@@ -124,6 +189,16 @@ class AllTeamsTableViewController: UITableViewController {
         }
     }
     
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        
+        selectedTeam = allTeams[indexPath.row]
+        self.databaseController?.currentTeam = selectedTeam
+        self.performSegue(withIdentifier: "teamsToHeroesSegue", sender: nil)
+        
+    }
+    
 
     /*
     // Override to support conditional editing of the table view.
@@ -133,17 +208,19 @@ class AllTeamsTableViewController: UITableViewController {
     }
     */
 
-    /*
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        if editingStyle == .delete && indexPath.section == SECTION_TEAM {
+            self.databaseController?.deleteTeam(team: allTeams[indexPath.row])
+            tableView.performBatchUpdates({
+                self.allTeams.remove(at: indexPath.row)
+                self.tableView.deleteRows(at: [indexPath], with: .fade)
+                self.tableView.reloadSections([SECTION_TEAM_TOTAL], with: .automatic)
+            }, completion:nil)
+
+            
+        }
     }
-    */
 
     /*
     // Override to support rearranging the table view.
@@ -160,14 +237,12 @@ class AllTeamsTableViewController: UITableViewController {
     }
     */
 
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        let party = segue.destination as! CurrentPartyTableViewController
+        party.currentTeam = selectedTeam
     }
-    */
 
 }

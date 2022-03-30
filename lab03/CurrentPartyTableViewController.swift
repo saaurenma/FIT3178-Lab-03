@@ -8,10 +8,6 @@
 import UIKit
 
 class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
-
-    
-    
-
     
     let SECTION_HERO = 0
     let SECTION_INFO = 1
@@ -23,6 +19,8 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
     
     var listenerType: ListenerType = .team
     weak var databaseController: DatabaseProtocol?
+    
+    var currentTeam: Team?
 
     
     override func viewDidLoad() {
@@ -37,6 +35,11 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
         // set databaseController
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
+
+        
+        if let currentTeam = currentTeam {
+            self.title = "Current party: \(currentTeam.name!)"
+        }
         
     }
     
@@ -48,6 +51,12 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
     func onAllHeroesChange(change: DatabaseChange, heroes: [Superhero]) {
         // do nothing
     }
+    
+    func onTeamsChange(change: DatabaseChange, teams: [Team]) {
+        // do nothing
+    }
+    
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -62,8 +71,7 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
     
     func addSuperhero(_ newHero: Superhero) -> Bool {
         
-        
-        return databaseController?.addHeroToTeam(hero: newHero, team: databaseController!.defaultTeam) ?? false
+        return databaseController?.addHeroToTeam(hero: newHero, team: databaseController!.currentTeam!) ?? false
         
     }
     
@@ -146,7 +154,7 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete && indexPath.section == SECTION_HERO {
-            self.databaseController?.removeHeroFromTeam(hero: currentParty[indexPath.row], team: databaseController!.defaultTeam)
+            self.databaseController?.removeHeroFromTeam(hero: currentParty[indexPath.row], team: currentTeam!)
         }
         
     }

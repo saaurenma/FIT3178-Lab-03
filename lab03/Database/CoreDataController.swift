@@ -11,6 +11,9 @@ import CoreData
 
 class CoreDataController: NSObject, DatabaseProtocol, NSFetchedResultsControllerDelegate {
     
+    
+    
+    
     let DEFAULT_TEAM_NAME = "Default Team"
     var teamHeroesFetchedResultsController: NSFetchedResultsController<Superhero>?
     
@@ -19,31 +22,38 @@ class CoreDataController: NSObject, DatabaseProtocol, NSFetchedResultsController
     
     var allHeroesFetchedResultsController: NSFetchedResultsController<Superhero>?
     
+    var allTeamsFetchedResultsController: NSFetchedResultsController<Team>?
+
     // lazy property not initialized when rest of class initialised
     // lazy property initialized first time it's value is requested
     
-    lazy var defaultTeam: Team = {
-        
-        var teams = [Team]()
-        
-        let request: NSFetchRequest<Team> = Team.fetchRequest()
-        let predicate = NSPredicate(format: "name = %@", DEFAULT_TEAM_NAME)
-        request.predicate = predicate
-        
-        
-        do {
-            try teams = persistentContainer.viewContext.fetch(request)
-        } catch {
-            print("Fetch Request Failed: \(error)")
-        }
-        
-        if let firstTeam = teams.first {
-            return firstTeam
-        }
-        
-        return addTeam(teamName: DEFAULT_TEAM_NAME)
-        
-    }()
+    var currentTeam: Team?
+    
+    
+
+//    lazy var defaultTeam: Team = {
+//        let DEFAULT_TEAM_NAME = currentTeam.name
+//
+//        var teams = [Team]()
+//
+//        let request: NSFetchRequest<Team> = Team.fetchRequest()
+//        let predicate = NSPredicate(format: "name = %@", DEFAULT_TEAM_NAME)
+//        request.predicate = predicate
+//
+//
+//        do {
+//            try teams = persistentContainer.viewContext.fetch(request)
+//        } catch {
+//            print("Fetch Request Failed: \(error)")
+//        }
+//
+//        if let firstTeam = teams.first {
+//            return firstTeam
+//        }
+//
+//        return addTeam(teamName: DEFAULT_TEAM_NAME)
+//
+//    }()
     
     
     override init() {
@@ -183,6 +193,39 @@ class CoreDataController: NSObject, DatabaseProtocol, NSFetchedResultsController
     }
     
     
+    func fetchAllTeams() -> [Team] {
+        
+        if allTeamsFetchedResultsController == nil {
+            let request: NSFetchRequest<Team> = Team.fetchRequest()
+            let nameSortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+            request.sortDescriptors = [nameSortDescriptor]
+            
+            // initialise fetched results controller
+            allTeamsFetchedResultsController = NSFetchedResultsController<Team>(fetchRequest: request, managedObjectContext: persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+            
+            allTeamsFetchedResultsController?.delegate = self
+            
+            do {
+                try allTeamsFetchedResultsController?.performFetch()
+            } catch {
+                print("Fetch Request Failed: \(error)")
+            }
+            
+        }
+        
+        if let teams = allTeamsFetchedResultsController?.fetchedObjects {
+            return teams
+        }
+        
+        return [Team]()
+        
+        
+    }
+    
+    
+    
+    
+    
     func addListener(listener: DatabaseListener) {
         
         listeners.addDelegate(listener)
@@ -195,6 +238,10 @@ class CoreDataController: NSObject, DatabaseProtocol, NSFetchedResultsController
             listener.onTeamChange(change: .update, teamHeroes: fetchTeamHeroes())
         }
         
+        if listener.listenerType == .teams {
+            listener.onTeamChange(change: .update, teamHeroes: fetchTeamHeroes())
+            listener.onTeamsChange(change: .update, teams: fetchAllTeams())
+        }
         
     }
     

@@ -18,6 +18,7 @@
 		3793793227E2EF130097CAD6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3793793127E2EF130097CAD6 /* Assets.xcassets */; };
 		3793793527E2EF130097CAD6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3793793327E2EF130097CAD6 /* LaunchScreen.storyboard */; };
 		3793793F27E2F1080097CAD6 /* CurrentPartyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3793793E27E2F1080097CAD6 /* CurrentPartyTableViewController.swift */; };
+		3798EDEF27F4190D00DE6B82 /* AddTeamDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3798EDEE27F4190D00DE6B82 /* AddTeamDelegate.swift */; };
 		379C460927F1267100FB9FAB /* Week04-DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 379C460727F1267100FB9FAB /* Week04-DataModel.xcdatamodeld */; };
 		379C460E27F127C200FB9FAB /* Superhero+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379C460A27F127C100FB9FAB /* Superhero+CoreDataClass.swift */; };
 		379C460F27F127C200FB9FAB /* Superhero+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379C460B27F127C100FB9FAB /* Superhero+CoreDataProperties.swift */; };
@@ -42,6 +43,7 @@
 		3793793427E2EF130097CAD6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3793793627E2EF130097CAD6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3793793E27E2F1080097CAD6 /* CurrentPartyTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentPartyTableViewController.swift; sourceTree = "<group>"; };
+		3798EDEE27F4190D00DE6B82 /* AddTeamDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTeamDelegate.swift; sourceTree = "<group>"; };
 		379C460827F1267100FB9FAB /* Week04-DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Week04-DataModel.xcdatamodel"; sourceTree = "<group>"; };
 		379C460A27F127C100FB9FAB /* Superhero+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Superhero+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		379C460B27F127C100FB9FAB /* Superhero+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Superhero+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
@@ -96,6 +98,7 @@
 				372A57E427E98D2300581FD4 /* HeroCountTableViewCell.swift */,
 				3758EBBC27EA9EB70017BC4C /* CreateHeroViewController.swift */,
 				3781FFEA27F2C337004E3347 /* AllTeamsTableViewController.swift */,
+				3798EDEE27F4190D00DE6B82 /* AddTeamDelegate.swift */,
 			);
 			path = lab03;
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 				379C461627F12A0300FB9FAB /* MulticastDelegate.swift in Sources */,
 				379C460E27F127C200FB9FAB /* Superhero+CoreDataClass.swift in Sources */,
 				379C461027F127C200FB9FAB /* Team+CoreDataClass.swift in Sources */,
+				3798EDEF27F4190D00DE6B82 /* AddTeamDelegate.swift in Sources */,
 				3793793F27E2F1080097CAD6 /* CurrentPartyTableViewController.swift in Sources */,
 				379C460927F1267100FB9FAB /* Week04-DataModel.xcdatamodeld in Sources */,
 			);
