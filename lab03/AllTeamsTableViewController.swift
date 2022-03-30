@@ -10,7 +10,7 @@ import UIKit
 class AllTeamsTableViewController: UITableViewController, DatabaseListener {
     
     
-    var listenerType: ListenerType = .team
+    var listenerType: ListenerType = .teams
     weak var databaseController: DatabaseProtocol?
 
 

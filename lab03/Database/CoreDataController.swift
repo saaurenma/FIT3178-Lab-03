@@ -14,7 +14,7 @@ class CoreDataController: NSObject, DatabaseProtocol, NSFetchedResultsController
     
     
     
-    let DEFAULT_TEAM_NAME = "Default Team"
+    let DEFAULT_TEAM_NAME = "dd"
     var teamHeroesFetchedResultsController: NSFetchedResultsController<Superhero>?
     
     var listeners = MulticastDelegate<DatabaseListener>()
@@ -91,10 +91,15 @@ class CoreDataController: NSObject, DatabaseProtocol, NSFetchedResultsController
             
             let fetchRequest: NSFetchRequest<Superhero> = Superhero.fetchRequest()
             let nameSortDescriptor = NSSortDescriptor(key: "name", ascending: true)
-            let predicate = NSPredicate(format: "ANY teams.name == %@", DEFAULT_TEAM_NAME)
             
-            fetchRequest.sortDescriptors = [nameSortDescriptor]
-            fetchRequest.predicate = predicate
+            if let currentTeam = currentTeam {
+                let predicate = NSPredicate(format: "ANY teams.name == %@", currentTeam.name!)
+                fetchRequest.sortDescriptors = [nameSortDescriptor]
+                fetchRequest.predicate = predicate
+            }
+            else {
+                print("fail")
+            }
             
             teamHeroesFetchedResultsController = NSFetchedResultsController<Superhero>(fetchRequest: fetchRequest, managedObjectContext: persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
             
@@ -239,7 +244,6 @@ class CoreDataController: NSObject, DatabaseProtocol, NSFetchedResultsController
         }
         
         if listener.listenerType == .teams {
-            listener.onTeamChange(change: .update, teamHeroes: fetchTeamHeroes())
             listener.onTeamsChange(change: .update, teams: fetchAllTeams())
         }
         
