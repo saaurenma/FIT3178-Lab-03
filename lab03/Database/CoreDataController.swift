@@ -32,7 +32,7 @@ class CoreDataController: NSObject, DatabaseProtocol, NSFetchedResultsController
     
 
 //    lazy var defaultTeam: Team = {
-//        let DEFAULT_TEAM_NAME = currentTeam.name
+////        let DEFAULT_TEAM_NAME = currentTeam.name
 //
 //        var teams = [Team]()
 //
@@ -91,19 +91,17 @@ class CoreDataController: NSObject, DatabaseProtocol, NSFetchedResultsController
             
             let fetchRequest: NSFetchRequest<Superhero> = Superhero.fetchRequest()
             let nameSortDescriptor = NSSortDescriptor(key: "name", ascending: true)
-            
             if let currentTeam = currentTeam {
+                print(currentTeam.name!)
                 let predicate = NSPredicate(format: "ANY teams.name == %@", currentTeam.name!)
                 fetchRequest.sortDescriptors = [nameSortDescriptor]
                 fetchRequest.predicate = predicate
+                teamHeroesFetchedResultsController = NSFetchedResultsController<Superhero>(fetchRequest: fetchRequest, managedObjectContext: persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+                
+                teamHeroesFetchedResultsController?.delegate = self
             }
-            else {
-                print("fail")
-            }
-            
-            teamHeroesFetchedResultsController = NSFetchedResultsController<Superhero>(fetchRequest: fetchRequest, managedObjectContext: persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-            
-            teamHeroesFetchedResultsController?.delegate = self
+
+
             
             
             do {
@@ -116,6 +114,7 @@ class CoreDataController: NSObject, DatabaseProtocol, NSFetchedResultsController
         }
         
         
+        
         var heroes = [Superhero]()
         if teamHeroesFetchedResultsController?.fetchedObjects != nil {
             heroes = (teamHeroesFetchedResultsController?.fetchedObjects)!
@@ -124,6 +123,8 @@ class CoreDataController: NSObject, DatabaseProtocol, NSFetchedResultsController
         return heroes
         
     }
+    
+    
     
     func addHeroToTeam(hero: Superhero, team: Team) -> Bool {
         guard let heroes = team.heroes, heroes.contains(hero) == false, heroes.count < 6 else {
@@ -192,7 +193,6 @@ class CoreDataController: NSObject, DatabaseProtocol, NSFetchedResultsController
         if let heroes = allHeroesFetchedResultsController?.fetchedObjects {
             return heroes
         }
-        
         return [Superhero]()
         
     }
@@ -276,6 +276,17 @@ class CoreDataController: NSObject, DatabaseProtocol, NSFetchedResultsController
                 
                 if listener.listenerType == .team || listener.listenerType == .all {
                     listener.onTeamChange(change: .update, teamHeroes: fetchTeamHeroes())
+                }
+                
+            }
+        }
+        
+        else if controller == allTeamsFetchedResultsController {
+            listeners.invoke { (listener) in
+                
+                if listener.listenerType == .teams || listener.listenerType == .all {
+                    listener.onTeamsChange(change: .update, teams: fetchAllTeams())
+                
                 }
                 
             }

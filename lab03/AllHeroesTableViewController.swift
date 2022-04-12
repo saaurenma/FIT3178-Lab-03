@@ -169,9 +169,12 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let hero = filteredHeroes[indexPath.row]
+        print("Allheroestableview: hero -> \(hero.name!), team -> \(databaseController!.currentTeam!.name!)")
         let heroAdded = databaseController?.addHeroToTeam(hero: hero, team: databaseController!.currentTeam!) ?? false
         print("hero added? -> \(heroAdded)")
+
         if heroAdded {
+
             navigationController?.popViewController(animated: false)
             return
         }

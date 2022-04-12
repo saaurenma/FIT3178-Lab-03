@@ -35,16 +35,21 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
         // set databaseController
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
-
-        
+        currentTeam = databaseController?.currentTeam        
         if let currentTeam = currentTeam {
             self.title = "Current party: \(currentTeam.name!)"
+            
         }
         
     }
     
     func onTeamChange(change: DatabaseChange, teamHeroes: [Superhero]) {
+        
         currentParty = teamHeroes
+        print("  here  ")
+        print("team name -> \(currentTeam!.name!)")
+        print(teamHeroes)
+        print("  here  ")
         tableView.reloadData()
     }
     
@@ -59,6 +64,7 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
     
     
     override func viewWillAppear(_ animated: Bool) {
+
         super.viewWillAppear(animated)
         databaseController?.addListener(listener: self)
     }
@@ -68,13 +74,6 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
         databaseController?.removeListener(listener: self)
     }
 
-    
-    func addSuperhero(_ newHero: Superhero) -> Bool {
-        
-        return databaseController?.addHeroToTeam(hero: newHero, team: databaseController!.currentTeam!) ?? false
-        
-    }
-    
     
     
     // MARK: - Table view data source
@@ -105,6 +104,7 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
             let heroCell = tableView.dequeueReusableCell(withIdentifier: CELL_HERO, for: indexPath)
             
             var content = heroCell.defaultContentConfiguration()
+//            let hero = databaseController?.
             let hero = currentParty[indexPath.row]
             
             content.text = hero.name
@@ -153,7 +153,11 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
+        
         if editingStyle == .delete && indexPath.section == SECTION_HERO {
+            print("--- delete cell ---")
+            print(currentParty[indexPath.row])
+            print(currentTeam!.name)
             self.databaseController?.removeHeroFromTeam(hero: currentParty[indexPath.row], team: currentTeam!)
         }
         

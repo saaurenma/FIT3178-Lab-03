@@ -73,9 +73,11 @@ class AllTeamsTableViewController: UITableViewController, DatabaseListener {
 
         
     func addTeam(_ newTeam: String) -> Bool {
-        if let teamObject = databaseController?.addTeam(teamName: newTeam) {
+        
+        if allTeams.count < 10 {
+            let teamObject = databaseController?.addTeam(teamName: newTeam)
             tableView.performBatchUpdates({
-                allTeams.append(teamObject)
+                allTeams.append(teamObject!)
                 tableView.insertRows(at: [IndexPath(row: allTeams.count - 1, section:
             SECTION_TEAM)],
                     with: .automatic)
@@ -156,7 +158,7 @@ class AllTeamsTableViewController: UITableViewController, DatabaseListener {
             let teamCell = tableView.dequeueReusableCell(withIdentifier: CELL_TEAM, for: indexPath)
             
             var content = teamCell.defaultContentConfiguration()
-            let team = self.allTeams[indexPath.row]
+            let team = allTeams[indexPath.row]
             
             content.text = team.name
             teamCell.contentConfiguration = content
@@ -194,32 +196,29 @@ class AllTeamsTableViewController: UITableViewController, DatabaseListener {
         
         
         selectedTeam = allTeams[indexPath.row]
-        self.databaseController?.currentTeam = selectedTeam
+        self.databaseController?.currentTeam = selectedTeam!
         self.performSegue(withIdentifier: "teamsToHeroesSegue", sender: nil)
         
     }
     
 
-    /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+        if indexPath.section == SECTION_TEAM {
+            return true
+        }
+        
+        return false
     }
-    */
 
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete && indexPath.section == SECTION_TEAM {
             self.databaseController?.deleteTeam(team: allTeams[indexPath.row])
-            tableView.performBatchUpdates({
-                self.allTeams.remove(at: indexPath.row)
-                self.tableView.deleteRows(at: [indexPath], with: .fade)
-                self.tableView.reloadSections([SECTION_TEAM_TOTAL], with: .automatic)
-            }, completion:nil)
 
-            
         }
+        
+        
     }
 
     /*
@@ -242,7 +241,8 @@ class AllTeamsTableViewController: UITableViewController, DatabaseListener {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let party = segue.destination as! CurrentPartyTableViewController
-        party.currentTeam = selectedTeam
+        //party.currentTeam = selectedTeam
+        databaseController?.currentTeam = selectedTeam
     }
 
 }
