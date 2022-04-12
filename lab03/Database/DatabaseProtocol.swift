@@ -48,6 +48,7 @@ protocol DatabaseProtocol: AnyObject {
     func addHeroToTeam(hero: Superhero, team: Team) -> Bool
     func removeHeroFromTeam(hero:Superhero, team:Team)
     
-    
+    func logInUser(email: String, password: String)
+    func createUser(newEmail: String, newPassword: String)
     
 }

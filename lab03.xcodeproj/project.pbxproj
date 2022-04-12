@@ -26,6 +26,7 @@
 		37DB8ABC28053AF9002999B0 /* Superhero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DB8ABB28053AF9002999B0 /* Superhero.swift */; };
 		37DB8ABE28053C37002999B0 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DB8ABD28053C37002999B0 /* Team.swift */; };
 		37DB8AC028053C93002999B0 /* FirebaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DB8ABF28053C93002999B0 /* FirebaseController.swift */; };
+		37DB8AC228054FB4002999B0 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DB8AC128054FB3002999B0 /* SignInViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		37DB8ABB28053AF9002999B0 /* Superhero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Superhero.swift; sourceTree = "<group>"; };
 		37DB8ABD28053C37002999B0 /* Team.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		37DB8ABF28053C93002999B0 /* FirebaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseController.swift; sourceTree = "<group>"; };
+		37DB8AC128054FB3002999B0 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 				37DB8ABB28053AF9002999B0 /* Superhero.swift */,
 				37DB8ABD28053C37002999B0 /* Team.swift */,
 				37DB8ABF28053C93002999B0 /* FirebaseController.swift */,
+				37DB8AC128054FB3002999B0 /* SignInViewController.swift */,
 			);
 			path = lab03;
 			sourceTree = "<group>";
@@ -196,6 +199,7 @@
 				3735034C27E3024C0020738D /* AllHeroesTableViewController.swift in Sources */,
 				3793792927E2EF110097CAD6 /* AppDelegate.swift in Sources */,
 				3758EBBD27EA9EB70017BC4C /* CreateHeroViewController.swift in Sources */,
+				37DB8AC228054FB4002999B0 /* SignInViewController.swift in Sources */,
 				3793792B27E2EF110097CAD6 /* SceneDelegate.swift in Sources */,
 				372A57E527E98D2300581FD4 /* HeroCountTableViewCell.swift in Sources */,
 				379C461827F12A2500FB9FAB /* DatabaseProtocol.swift in Sources */,

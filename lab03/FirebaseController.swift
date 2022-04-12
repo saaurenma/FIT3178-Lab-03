@@ -11,6 +11,7 @@ import Firebase
 import FirebaseFirestoreSwift
 
 class FirebaseController: NSObject, DatabaseProtocol {
+
     
     
     let DEFAULT_TEAM_NAME = "Default Team"
@@ -37,26 +38,65 @@ class FirebaseController: NSObject, DatabaseProtocol {
         super.init()
 
         // anonymous sign in
+//        Task {
+//            do {
+//                let authDataResult = try await authController.signInAnonymously()
+//                currentUser = authDataResult.user
+//            }
+//            catch {
+//                // sign in failed
+//                fatalError("Firebase Authentication Failed with Error \(String(describing: error))")
+//            }
+//
+//            // sign in success
+//            self.setupHeroListener()
+//
+//        }
+        
+    }
+    
+    
+    
+    
+    func cleanup() {
+        print("cleanup")
+    }
+    
+    
+    func logInUser(email: String, password: String) {
         Task {
             do {
-                let authDataResult = try await authController.signInAnonymously()
+                let authDataResult = try await authController.signIn(withEmail: email, password: password)
                 currentUser = authDataResult.user
             }
             catch {
                 // sign in failed
                 fatalError("Firebase Authentication Failed with Error \(String(describing: error))")
             }
-            
+
             // sign in success
             self.setupHeroListener()
-            
+
         }
-        
     }
     
-    func cleanup() {
-        print("cleanup")
+    func createUser(newEmail: String, newPassword: String) {
+        Task {
+            do {
+                let authDataResult = try await authController.createUser(withEmail: newEmail, password: newPassword)
+                currentUser = authDataResult.user
+            }
+            catch {
+                // sign in failed
+                fatalError("Firebase Authentication Failed with Error \(String(describing: error))")
+            }
+
+            // sign up success
+            self.setupHeroListener()
+
+        }
     }
+    
     
     func addListener(listener: DatabaseListener) {
         listeners.addDelegate(listener)
