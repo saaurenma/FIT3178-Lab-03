@@ -26,6 +26,8 @@ class FirebaseController: NSObject, DatabaseProtocol {
     var teamsRef: CollectionReference?
     var currentUser: FirebaseAuth.User?
     
+    var authHandle: AuthStateDidChangeListenerHandle?
+    
     
     override init() {
         
@@ -36,6 +38,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         heroList = [Superhero]()
         defaultTeam = Team()
         super.init()
+        
 
         // anonymous sign in
 //        Task {
@@ -64,6 +67,8 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     
     func logInUser(email: String, password: String) {
+        
+        
         Task {
             do {
                 let authDataResult = try await authController.signIn(withEmail: email, password: password)
@@ -71,30 +76,38 @@ class FirebaseController: NSObject, DatabaseProtocol {
             }
             catch {
                 // sign in failed
-                fatalError("Firebase Authentication Failed with Error \(String(describing: error))")
+                print("Firebase Authentication Failed with Error \(String(describing: error))")
+                
             }
 
             // sign in success
-            self.setupHeroListener()
+            //self.setupHeroListener()
 
         }
+        
     }
     
+    
     func createUser(newEmail: String, newPassword: String) {
+        
         Task {
             do {
                 let authDataResult = try await authController.createUser(withEmail: newEmail, password: newPassword)
                 currentUser = authDataResult.user
             }
             catch {
-                // sign in failed
-                fatalError("Firebase Authentication Failed with Error \(String(describing: error))")
+                // sign up failed
+                print("Firebase Authentication Failed with Error \(String(describing: error))")
             }
-
+            
+            authController.addStateDidChangeListener { (auth, user) in
+                <#code#>
+            }
             // sign up success
-            self.setupHeroListener()
+            //self.setupHeroListener()
 
         }
+
     }
     
     
@@ -108,7 +121,10 @@ class FirebaseController: NSObject, DatabaseProtocol {
         if listener.listenerType == .heroes || listener.listenerType == .all {
             listener.onAllHeroesChange(change: .update, heroes: heroList)
         }
-
+        
+        if listener.listenerType == .auth {
+            listener.onAuthChange(change: .update, authState: authHandle!)
+        }
 
     }
     
@@ -214,6 +230,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         }
         
     }
+
     func setupTeamListener() {
         teamsRef = database.collection("teams")
         teamsRef?.whereField("name", isEqualTo: DEFAULT_TEAM_NAME).addSnapshotListener {
@@ -228,6 +245,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
             
         }
     }
+    
     func parseHeroesSnapshot(snapshot: QuerySnapshot) {
         snapshot.documentChanges.forEach { (change) in
             

@@ -8,6 +8,8 @@
 import UIKit
 
 class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdating, DatabaseListener {
+
+    
     
     let SECTION_HERO = 0
     let SECTION_INFO = 1

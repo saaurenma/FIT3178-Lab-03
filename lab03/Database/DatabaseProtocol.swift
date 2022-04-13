@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Firebase
 
 enum DatabaseChange {
     
@@ -21,6 +22,7 @@ enum ListenerType {
     case team
     case heroes
     case all
+    case auth
     
 }
 
@@ -29,6 +31,7 @@ protocol DatabaseListener: AnyObject {
     var listenerType: ListenerType{get set}
     func onTeamChange(change: DatabaseChange, teamHeroes: [Superhero])
     func onAllHeroesChange(change: DatabaseChange, heroes: [Superhero])
+    func onAuthChange(change: DatabaseChange, authState: AuthStateDidChangeListenerHandle)
     
 }
 

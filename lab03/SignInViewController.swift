@@ -10,25 +10,52 @@ import UIKit
 import Firebase
 import FirebaseAuth
 
-class SignInViewController: UIViewController {
+class SignInViewController: UIViewController, DatabaseListener {
+    
 
+
+    
+    
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     weak var databaseController: DatabaseProtocol?
 
-    
-    
+    var listenerType: ListenerType = .auth
+
+    var authHandle: AuthStateDidChangeListenerHandle?
     
     override func viewDidLoad() {
         passwordTextField.isSecureTextEntry = true
         
-        // initialise firebase
-//        FirebaseApp.configure()
-        
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        databaseController = appDelegate?.databaseController
         
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        databaseController?.addListener(listener: self)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        databaseController?.removeListener(listener: self)
+    }
+    
+    func onAuthChange(change: DatabaseChange, authState: AuthStateDidChangeListenerHandle) {
+        authHandle = authState
+    }
+    
+    
+    func onTeamChange(change: DatabaseChange, teamHeroes: [Superhero]) {
+        // none
+    }
+    
+    func onAllHeroesChange(change: DatabaseChange, heroes: [Superhero]) {
+        //none
     }
     
     func displayMessage(title: String, message: String){
@@ -55,7 +82,7 @@ class SignInViewController: UIViewController {
     @IBAction func logIn(_ sender: Any) {
         let email = emailTextField.text
         let password = passwordTextField.text
-        
+
         if let email = email, let password = password {
             if validateEmail(email: email) == true && validatePassword(password: password) == true {
                 databaseController?.logInUser(email: email, password: password)
@@ -70,18 +97,22 @@ class SignInViewController: UIViewController {
     }
     
     @IBAction func signUp(_ sender: Any) {
+
         let email = emailTextField.text
         let password = passwordTextField.text
         
         if let email = email, let password = password {
+
             if validateEmail(email: email) == true && validatePassword(password: password) {
+
                 databaseController?.createUser(newEmail: email, newPassword: password)
+
             }
             
-            else {
-                displayMessage(title: "", message: "")
-            }
-        
+//            else {
+//                displayMessage(title: "", message: "")
+//            }
+//
         
         
     }
