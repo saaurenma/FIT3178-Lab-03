@@ -24,6 +24,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
     var database: Firestore
     var heroesRef: CollectionReference?
     var teamsRef: CollectionReference?
+    var usersRef: CollectionReference?
     var currentUser: FirebaseAuth.User?
     
     var authHandle: AuthStateDidChangeListenerHandle?
@@ -206,6 +207,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         let team = Team()
         team.name = teamName
         if let teamRef = teamsRef?.addDocument(data: ["name":teamName]) {
+            if let userRef = u
             team.id = teamRef.documentID
         }
         return team
