@@ -21,9 +21,9 @@ class SignInViewController: UIViewController, DatabaseListener {
     weak var databaseController: DatabaseProtocol?
 
     var listenerType: ListenerType = .auth
-
-    var authHandle: AuthStateDidChangeListenerHandle?
     
+    var latestError: String?
+        
     override func viewDidLoad() {
         passwordTextField.isSecureTextEntry = true
         
@@ -45,8 +45,25 @@ class SignInViewController: UIViewController, DatabaseListener {
         databaseController?.removeListener(listener: self)
     }
     
-    func onAuthChange(change: DatabaseChange, authState: AuthStateDidChangeListenerHandle) {
-        authHandle = authState
+    func onAuthChange(change: DatabaseChange, userIsLoggedIn: Bool, error:String) {
+        print("USER LOGIN STATUS -- \(userIsLoggedIn)")
+        Auth.auth().addStateDidChangeListener{ auth,user in
+            if let user = user {
+                if userIsLoggedIn == true {
+                    print("user signed in as \(user.email!)")
+                    self.performSegue(withIdentifier: "showCurrentParty", sender: nil)
+                    
+                }
+                
+                else if error != ""{
+                    self.displayMessage(title: "Error", message: error)
+                }
+                
+            }
+
+        }
+        
+        
     }
     
     
@@ -82,14 +99,14 @@ class SignInViewController: UIViewController, DatabaseListener {
     @IBAction func logIn(_ sender: Any) {
         let email = emailTextField.text
         let password = passwordTextField.text
-
+        
         if let email = email, let password = password {
             if validateEmail(email: email) == true && validatePassword(password: password) == true {
                 databaseController?.logInUser(email: email, password: password)
             }
             
             else {
-                displayMessage(title: "", message: "")
+                displayMessage(title: "Error", message: "Invalid email or password")
             }
         }
         
@@ -109,10 +126,10 @@ class SignInViewController: UIViewController, DatabaseListener {
 
             }
             
-//            else {
-//                displayMessage(title: "", message: "")
-//            }
-//
+            else {
+                displayMessage(title: "Error", message: "Invalid email or password")
+            }
+
         
         
     }

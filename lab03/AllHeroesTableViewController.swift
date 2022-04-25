@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import Foundation
+import Firebase
+
 
 class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdating, DatabaseListener {
 
@@ -69,6 +72,11 @@ class AllHeroesTableViewController: UITableViewController, UISearchResultsUpdati
         updateSearchResults(for: navigationItem.searchController!)
     }
 
+    func onAuthChange(change: DatabaseChange, userIsLoggedIn: Bool, error:String) {
+        //
+    }
+
+    
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text?.lowercased() else {
             return

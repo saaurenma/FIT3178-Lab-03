@@ -6,8 +6,13 @@
 //
 
 import UIKit
+import Foundation
+import Firebase
+
 
 class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
+
+    
 
     
     
@@ -49,6 +54,10 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
         // do nothing
     }
     
+    func onAuthChange(change: DatabaseChange, userIsLoggedIn: Bool, error:String) {
+        // do nothing
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         databaseController?.addListener(listener: self)
@@ -57,8 +66,16 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         databaseController?.removeListener(listener: self)
+        
+        
     }
 
+    @IBAction func signOutUser(_ sender: Any) {
+        
+        databaseController?.signOutUser()
+        navigationController?.popViewController(animated: true)
+        
+    }
     
     func addSuperhero(_ newHero: Superhero) -> Bool {
         

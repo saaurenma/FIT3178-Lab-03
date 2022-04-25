@@ -66,6 +66,11 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Current Party" id="Mu2-DT-nxp">
+                        <barButtonItem key="leftBarButtonItem" title="Sign Out" id="BZz-sy-T2M">
+                            <connections>
+                                <action selector="signOutUser:" destination="rWb-TW-9Ts" id="Gq4-og-5xI"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="yKh-s3-pmO">
                             <connections>
                                 <segue destination="M5A-fz-4Mx" kind="show" identifier="allHeroesSegue" id="t33-iD-fEW"/>

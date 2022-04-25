@@ -31,7 +31,7 @@ protocol DatabaseListener: AnyObject {
     var listenerType: ListenerType{get set}
     func onTeamChange(change: DatabaseChange, teamHeroes: [Superhero])
     func onAllHeroesChange(change: DatabaseChange, heroes: [Superhero])
-    func onAuthChange(change: DatabaseChange, authState: AuthStateDidChangeListenerHandle)
+    func onAuthChange(change: DatabaseChange, userIsLoggedIn: Bool, error:String)
     
 }
 
@@ -53,5 +53,6 @@ protocol DatabaseProtocol: AnyObject {
     
     func logInUser(email: String, password: String)
     func createUser(newEmail: String, newPassword: String)
+    func signOutUser()
     
 }

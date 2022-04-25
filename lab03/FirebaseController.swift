@@ -28,6 +28,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     var authHandle: AuthStateDidChangeListenerHandle?
     
+    var userLoginStatus: Bool
     
     override init() {
         
@@ -36,6 +37,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         authController = Auth.auth()
         database = Firestore.firestore()
         heroList = [Superhero]()
+        userLoginStatus = false
         defaultTeam = Team()
         super.init()
         
@@ -73,15 +75,28 @@ class FirebaseController: NSObject, DatabaseProtocol {
             do {
                 let authDataResult = try await authController.signIn(withEmail: email, password: password)
                 currentUser = authDataResult.user
+                listeners.invoke { (listener) in
+                    if listener.listenerType == ListenerType.auth ||
+                        listener.listenerType == ListenerType.all {
+                        listener.onAuthChange(change:.update, userIsLoggedIn: true, error: "")
+                        // sign in success
+                        self.setupHeroListener()
+                    }
+                }
             }
             catch {
                 // sign in failed
                 print("Firebase Authentication Failed with Error \(String(describing: error))")
-                
+                userLoginStatus = false
+                listeners.invoke { (listener) in
+                    if listener.listenerType == ListenerType.auth ||
+                        listener.listenerType == ListenerType.all {
+                        listener.onAuthChange(change:.update, userIsLoggedIn: false, error: String(describing: error.localizedDescription))
+                    }
+                }
             }
 
-            // sign in success
-            //self.setupHeroListener()
+
 
         }
         
@@ -94,20 +109,48 @@ class FirebaseController: NSObject, DatabaseProtocol {
             do {
                 let authDataResult = try await authController.createUser(withEmail: newEmail, password: newPassword)
                 currentUser = authDataResult.user
+                userLoginStatus = true
+                
+                listeners.invoke { (listener) in
+                    if listener.listenerType == ListenerType.auth ||
+                        listener.listenerType == ListenerType.all {
+                        listener.onAuthChange(change:.update, userIsLoggedIn: true, error: "")
+                        // sign up success
+                        self.setupHeroListener()
+                    }
+                }
             }
             catch {
                 // sign up failed
                 print("Firebase Authentication Failed with Error \(String(describing: error))")
+                listeners.invoke { (listener) in
+                    if listener.listenerType == ListenerType.auth ||
+                        listener.listenerType == ListenerType.all {
+                        listener.onAuthChange(change:.update, userIsLoggedIn: false, error: String(describing: error.localizedDescription))
+                    }
+                }
+                
             }
             
-            authController.addStateDidChangeListener { (auth, user) in
-                <#code#>
-            }
-            // sign up success
-            //self.setupHeroListener()
+
 
         }
 
+    }
+    
+    func signOutUser() {
+        do {
+            try authController.signOut()
+            listeners.invoke { (listener) in
+                if listener.listenerType == ListenerType.auth ||
+                    listener.listenerType == ListenerType.all {
+                    listener.onAuthChange(change:.update, userIsLoggedIn: false, error: "")
+                }
+            }
+        }
+        catch {
+            print(error)
+        }
     }
     
     
@@ -122,8 +165,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
             listener.onAllHeroesChange(change: .update, heroes: heroList)
         }
         
-        if listener.listenerType == .auth {
-            listener.onAuthChange(change: .update, authState: authHandle!)
+        if listener.listenerType == .auth || listener.listenerType == .all
+{
+            listener.onAuthChange(change: .update, userIsLoggedIn: userLoginStatus, error: "")
         }
 
     }
