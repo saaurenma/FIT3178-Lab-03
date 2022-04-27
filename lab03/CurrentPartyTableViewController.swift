@@ -38,8 +38,10 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
-        
+        navigationItem.hidesBackButton = true
+
         // set databaseController
+        
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
         
@@ -67,13 +69,6 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
         super.viewWillDisappear(animated)
         databaseController?.removeListener(listener: self)
         
-        
-    }
-
-    @IBAction func signOutUser(_ sender: Any) {
-        
-        databaseController?.signOutUser()
-        navigationController?.popViewController(animated: true)
         
     }
     
@@ -164,6 +159,7 @@ class CurrentPartyTableViewController: UITableViewController, DatabaseListener {
         
         if editingStyle == .delete && indexPath.section == SECTION_HERO {
             self.databaseController?.removeHeroFromTeam(hero: currentParty[indexPath.row], team: databaseController!.defaultTeam)
+            tableView.reloadData()
         }
         
     }

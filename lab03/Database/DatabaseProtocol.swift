@@ -53,6 +53,5 @@ protocol DatabaseProtocol: AnyObject {
     
     func logInUser(email: String, password: String)
     func createUser(newEmail: String, newPassword: String)
-    func signOutUser()
     
 }

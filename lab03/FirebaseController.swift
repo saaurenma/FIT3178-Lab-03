@@ -24,7 +24,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
     var database: Firestore
     var heroesRef: CollectionReference?
     var teamsRef: CollectionReference?
-    var usersRef: CollectionReference?
+    var userCollectionRef: CollectionReference?
     var currentUser: FirebaseAuth.User?
     
     var authHandle: AuthStateDidChangeListenerHandle?
@@ -76,6 +76,8 @@ class FirebaseController: NSObject, DatabaseProtocol {
             do {
                 let authDataResult = try await authController.signIn(withEmail: email, password: password)
                 currentUser = authDataResult.user
+                defaultTeam.id = currentUser?.uid
+                defaultTeam.name = DEFAULT_TEAM_NAME
                 listeners.invoke { (listener) in
                     if listener.listenerType == ListenerType.auth ||
                         listener.listenerType == ListenerType.all {
@@ -110,6 +112,15 @@ class FirebaseController: NSObject, DatabaseProtocol {
             do {
                 let authDataResult = try await authController.createUser(withEmail: newEmail, password: newPassword)
                 currentUser = authDataResult.user
+                
+                try await database.collection("teams").document(currentUser!.uid).setData([
+                    "name": DEFAULT_TEAM_NAME,
+                    
+                ])
+                
+                defaultTeam.id = currentUser?.uid
+                defaultTeam.name = DEFAULT_TEAM_NAME
+
                 userLoginStatus = true
                 
                 listeners.invoke { (listener) in
@@ -139,20 +150,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
 
     }
     
-    func signOutUser() {
-        do {
-            try authController.signOut()
-            listeners.invoke { (listener) in
-                if listener.listenerType == ListenerType.auth ||
-                    listener.listenerType == ListenerType.all {
-                    listener.onAuthChange(change:.update, userIsLoggedIn: false, error: "")
-                }
-            }
-        }
-        catch {
-            print(error)
-        }
-    }
     
     
     func addListener(listener: DatabaseListener) {
@@ -206,10 +203,18 @@ class FirebaseController: NSObject, DatabaseProtocol {
     func addTeam(teamName: String) -> Team {
         let team = Team()
         team.name = teamName
-        if let teamRef = teamsRef?.addDocument(data: ["name":teamName]) {
-            if let userRef = u
-            team.id = teamRef.documentID
-        }
+        team.id = currentUser?.uid
+//        if let teamRef = teamsRef?.addDocument(data: ["name":teamName]) {
+//            team.id = currentUser?.uid
+//        }
+        
+        teamsRef?.document(currentUser!.uid).setData([
+            
+            "name": teamName,
+            "team" : []
+            
+        ])
+        
         return team
         
     }
@@ -236,11 +241,12 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     func removeHeroFromTeam(hero: Superhero, team: Team) {
         if team.heroes.contains(hero), let teamID = team.id, let heroID = hero.id {
-            
             if let removedHeroRef = heroesRef?.document(heroID) {
                 teamsRef?.document(teamID).updateData(
                     ["heroes":FieldValue.arrayRemove([removedHeroRef])]
                 )
+                print("HEROES \(removedHeroRef.documentID)")
+
             }
             
         }
@@ -278,17 +284,41 @@ class FirebaseController: NSObject, DatabaseProtocol {
     }
 
     func setupTeamListener() {
+//        teamsRef?.whereField("name", isEqualTo: DEFAULT_TEAM_NAME).addSnapshotListener {
+//            (querySnapshot, error) in
+//
+//            guard let querySnapshot = querySnapshot, let teamSnapshot = querySnapshot.documents.first else {
+//                print("Error fetching teams: \(error!)")
+//                return
+//            }
+//
+//            print(teamSnapshot.documentID)
+//            self.parseTeamSnapshot(snapshot: teamSnapshot)
+//
+//        }
+//        Task {
+//            do {
+//                teamsRef = database.collection("teams")
+//                let userTeamDocument = try await teamsRef!.document(currentUser!.uid).getDocument()
+//                print("DOCUMENT IT \(userTeamDocument.documentID)")
+//                self.parseTeamSnapshot(snapshot: userTeamDocument)
+//
+//            }
+//            catch {
+//                print("Error returning team for user")
+//            }
+//        }
+        
         teamsRef = database.collection("teams")
-        teamsRef?.whereField("name", isEqualTo: DEFAULT_TEAM_NAME).addSnapshotListener {
+        teamsRef!.document(currentUser!.uid).addSnapshotListener{
             (querySnapshot, error) in
             
-            guard let querySnapshot = querySnapshot, let teamSnapshot = querySnapshot.documents.first else {
-                print("Error fetching teams: \(error!)")
+            guard let querySnapshot = querySnapshot else {
+                print("Failed to get team for this user --> \(error!)")
                 return
             }
             
-            self.parseTeamSnapshot(snapshot: teamSnapshot)
-            
+            self.parseTeamSnapshot(snapshot: querySnapshot)
         }
     }
     
@@ -328,13 +358,17 @@ class FirebaseController: NSObject, DatabaseProtocol {
             
         }
     }
-    func parseTeamSnapshot(snapshot: QueryDocumentSnapshot) {
+    func parseTeamSnapshot(snapshot: DocumentSnapshot) {
         
         defaultTeam = Team()
-        defaultTeam.name = snapshot.data()["name"] as? String
+        defaultTeam.name = DEFAULT_TEAM_NAME
         defaultTeam.id = snapshot.documentID
         
-        if let heroReferences = snapshot.data()["heroes"] as? [DocumentReference] {
+        if snapshot.data() == nil {
+            return
+        }
+        
+        if let heroReferences = snapshot.data()!["heroes"] as? [DocumentReference] {
             // if hero references exist, loop through each and use get herobyid and add to team
             for reference in heroReferences {
                 if let hero = getHeroByID(reference.documentID) {
